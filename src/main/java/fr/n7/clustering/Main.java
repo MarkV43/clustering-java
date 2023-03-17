@@ -33,13 +33,9 @@ public class Main {
                 System.out.println("Using method " + method + ", with " + regions + " regions");
 
                 switch (method) {
-                    case 1:
-                        Method1.run_xyz(allData, regions);
-                        break;
-                    case 2:
-                        Method2.run(allData);
-                    default:
-                        throw new RuntimeException("Unknown method number");
+                    case 1 -> new Method1().run_xyz(allData, regions);
+                    case 2 -> new Method2().run_xyz(allData, regions);
+                    default -> throw new RuntimeException("Unknown method number");
                 }
             }
 
