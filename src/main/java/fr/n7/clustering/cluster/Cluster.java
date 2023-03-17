@@ -60,4 +60,8 @@ public abstract class Cluster<P extends Point> implements Copy {
         points.addAll(other.points);
         center = Vec3.midpoint(points);
     }
+
+    public Point getCenter() {
+        return center;
+    }
 }

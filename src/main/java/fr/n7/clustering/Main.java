@@ -5,6 +5,7 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import fr.n7.clustering.methods.Method1;
 import fr.n7.clustering.methods.Method2;
+import fr.n7.clustering.methods.Method3;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,6 +36,7 @@ public class Main {
                 switch (method) {
                     case 1 -> new Method1().run_xyz(allData, regions);
                     case 2 -> new Method2().run_xyz(allData, regions);
+                    case 3 -> new Method3().run_xyz(allData, regions);
                     default -> throw new RuntimeException("Unknown method number");
                 }
             }

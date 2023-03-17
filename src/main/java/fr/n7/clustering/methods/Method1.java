@@ -2,8 +2,10 @@ package fr.n7.clustering.methods;
 
 import fr.n7.clustering.Record;
 import fr.n7.clustering.algorithms.TwoInOne;
+import fr.n7.clustering.cluster.Cluster;
 import fr.n7.clustering.cluster.ClusterXYZ;
 import fr.n7.clustering.algorithms.KMeans;
+import fr.n7.clustering.math.Point;
 import fr.n7.clustering.math.Vec3;
 
 import java.time.Duration;
@@ -11,7 +13,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Method1 extends Method {
+public class Method1 extends Method<ClusterXYZ, Vec3> {
     public List<ClusterXYZ> cluster_xyz(List<Record> records) {
         List<ClusterXYZ> clusters = new ArrayList<>(30_000);
 

@@ -7,7 +7,7 @@ import fr.n7.clustering.math.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Method2 extends Method {
+public class Method2 extends Method<ClusterXYZ, Vec3> {
     @Override
     public List<ClusterXYZ> cluster_xyz(List<Record> records) {
         List<ClusterXYZ> clusters = new ArrayList<>(30_000);
