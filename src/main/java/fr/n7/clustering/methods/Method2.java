@@ -28,15 +28,14 @@ public class Method2 extends Method<ClusterXYZ, Vec3> {
             deleted[i] = true;
             Record record = records.get(i);
 
-            ClusterXYZ cl = new ClusterXYZ(record.getXYZ(), record.pir);
+            ClusterXYZ cl = new ClusterXYZ(record);
 
             for (int j = i+1; j < size; j++) {
                 if (deleted[j]) continue;
                 Record rec = records.get(j);
-                Vec3 xyz = rec.getXYZ();
 
-                if (cl.canAddPoint(xyz, rec.pir)) {
-                    cl.addPoint(xyz, rec.pir);
+                if (cl.canAddPoint(rec)) {
+                    cl.addPoint(rec);
                     deleted[j] = true;
                 }
             }

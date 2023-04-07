@@ -1,4 +1,4 @@
-package fr.n7.clustering.algorithms;
+package fr.n7.clustering.pre;
 
 import fr.n7.clustering.Record;
 import fr.n7.clustering.math.Point;
@@ -11,15 +11,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 public abstract class KMeans {
-    public static List<List<Record>> separate_xyz(short k, List<Record> data) {
+    public static List<List<Record>> separate(int k, List<Record> data) {
         Random rand = new Random();
-        List<Record> centers = new ArrayList<>(Stream.generate(() -> {
+        /*List<Record> centers = new ArrayList<>(Stream.generate(() -> {
             Vec3 pos;
             do {
                 pos = new Vec3(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
             } while (pos.normSquared() > 1.0);
             return new Record((Vec3) pos.normalized());
-        }).limit(k).toList());
+        }).limit(k).toList());*/
+        List<Record> centers = new ArrayList<>(data.subList(0, k));
 
         var ref = new Object() {
             List<List<Record>> regions;
@@ -32,7 +33,6 @@ public abstract class KMeans {
                     .limit(k).toList();
 
             for (Record p : data) {
-                if (p == null) throw new RuntimeException("WHYYY");
                 double min = Double.POSITIVE_INFINITY;
                 int index = -1;
 
@@ -55,16 +55,9 @@ public abstract class KMeans {
             for (int index = 0; index < k; index++) {
                 List<Record> r = ref.regions.get(index);
 
-                if (r.isEmpty()) throw new RuntimeException("One of the regions was empty");
-
                 Vec3 old = centers.get(index).getXYZ();
 
-                List<Point> rx = r.stream().map(record -> {
-                    if (record == null) {
-                        throw new RuntimeException("THIS SHOULDNT BE HAPPENING");
-                    }
-                    return (Point) record.getXYZ();
-                }).toList();
+                List<Point> rx = r.stream().map(record -> (Point) record.getXYZ()).toList();
 
                 Record c = new Record((Vec3) Vec3.midpoint(rx));
                 centers.set(index, c);

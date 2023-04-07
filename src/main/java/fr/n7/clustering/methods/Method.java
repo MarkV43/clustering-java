@@ -1,10 +1,12 @@
 package fr.n7.clustering.methods;
 
 import fr.n7.clustering.Record;
-import fr.n7.clustering.algorithms.KMeans;
-import fr.n7.clustering.algorithms.TwoInOne;
-import fr.n7.clustering.cluster.Cluster;
 import fr.n7.clustering.cluster.ClusterXYZ;
+import fr.n7.clustering.math.Vec3;
+import fr.n7.clustering.post.ClusterCutting;
+import fr.n7.clustering.pre.KMeans;
+import fr.n7.clustering.post.TwoInOne;
+import fr.n7.clustering.cluster.Cluster;
 import fr.n7.clustering.math.Point;
 
 import java.time.Duration;
@@ -12,21 +14,7 @@ import java.time.Instant;
 import java.util.List;
 
 public abstract class Method<C extends Cluster<P>, P extends Point> {
-    public void run_xyz(List<Record> recs, short nRegions) {
-        // Regions
-        List<List<Record>> regions;
-
-        Instant t0 = Instant.now();
-
-        if (nRegions <= 1)
-            regions = List.of(recs);
-        else {
-            regions = KMeans.separate_xyz(nRegions, recs);
-            Instant t1 = Instant.now();
-
-            System.out.println("Finished k-means in " + Duration.between(t0, t1).toMillis() + " ms");
-        }
-
+    /*public List<ClusterXYZ> run_xyz(List<List<Vec3>> regions, short nRegions) {
         // Clusters
         Instant t2 = Instant.now();
         List<C> clusters = regions
@@ -36,6 +24,8 @@ public abstract class Method<C extends Cluster<P>, P extends Point> {
         Instant t3 = Instant.now();
 
         System.out.println("\rWe need " + clusters.size() + " clusters. Clustering finished in " + Duration.between(t2, t3).toMillis() + " ms\n\n");
+
+        // Post-treatment
 
         int old;
         int round = 0;
@@ -50,8 +40,12 @@ public abstract class Method<C extends Cluster<P>, P extends Point> {
             System.out.println("\rAfter round " + round + " of \"Two in One\", reduced from " + old + " to " + clusters.size() + " clusters. Took " + Duration.between(t4, t5).toMillis() + " ms\n");
         } while (old > clusters.size());
 
+        return clusters;
+
+        // Post-treatment (cluster cutting)
+
         System.out.println("Overall, took " + Duration.between(t0, Instant.now()).toMillis() + " ms\n");
-    }
+    }*/
 
     public abstract List<C> cluster_xyz(List<Record> records);
 }

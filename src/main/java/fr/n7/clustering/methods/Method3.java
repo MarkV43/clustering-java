@@ -20,7 +20,7 @@ public class Method3 extends Method<ClusterXYZ, Vec3> {
             deleted[i] = true;
             Record record = records.get(i);
 
-            ClusterXYZ cl = new ClusterXYZ(record.getXYZ(), record.pir);
+            ClusterXYZ cl = new ClusterXYZ(record);
 
             int closest;
             do {
@@ -32,10 +32,9 @@ public class Method3 extends Method<ClusterXYZ, Vec3> {
                 for (int j = 0; j < size; j++) {
                     if (deleted[j]) continue;
                     Record rec = records.get(j);
-                    Vec3 xyz = rec.getXYZ();
 
-                    if (cl.canAddPoint(xyz, rec.pir)) {
-                        double dist = center.distanceSquaredTo(xyz);
+                    if (cl.canAddPoint(rec)) {
+                        double dist = center.distanceSquaredTo(rec.getXYZ());
                         if (dist < distance) {
                             distance = dist;
                             closest = j;
@@ -45,7 +44,7 @@ public class Method3 extends Method<ClusterXYZ, Vec3> {
 
                 if (closest != -1) {
                     Record rec = records.get(closest);
-                    cl.addPoint(rec.getXYZ(), rec.pir);
+                    cl.addPoint(rec);
                     deleted[closest] = true;
                 }
             } while (closest != -1);

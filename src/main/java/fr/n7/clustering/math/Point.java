@@ -12,6 +12,8 @@ public abstract class Point implements Copy {
     public abstract Point div(double rhs);
     public abstract double normSquared();
 
+    public abstract double cross(Point rhs);
+
     public double norm() {
         return Math.sqrt(normSquared());
     }

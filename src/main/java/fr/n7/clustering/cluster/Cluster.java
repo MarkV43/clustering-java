@@ -1,6 +1,7 @@
 package fr.n7.clustering.cluster;
 
 import fr.n7.clustering.Copy;
+import fr.n7.clustering.Record;
 import fr.n7.clustering.math.Point;
 import fr.n7.clustering.math.Vec3;
 
@@ -14,19 +15,22 @@ public abstract class Cluster<P extends Point> implements Copy {
 
     protected Point center;
     protected double totalRateKbps;
-    protected List<Point> points;
+    protected List<Record> points;
 
-    public void addPoint(P point, double rate) {
-        points.add(point);
-        totalRateKbps += rate;
-        center = Point.midpoint(points);
+    public void addPoint(Record rec) {
+        points.add(rec);
+        totalRateKbps += rec.pir;
+        updateCenter();
     }
-    public boolean canAddPoint(P point, double rate) {
-        if (totalRateKbps + rate > MAX_RATE_KBPS) {
+
+    abstract void updateCenter();
+
+    public boolean canAddPoint(Record rec) {
+        if (totalRateKbps + rec.pir > MAX_RATE_KBPS) {
             return false;
         }
 
-        double dist = center.distanceSquaredTo(point);
+        double dist = center.distanceSquaredTo(rec.getXYZ());
 
         return dist < MAX_RADIUS_M * MAX_RADIUS_M / (EARTH_RADIUS_M * EARTH_RADIUS_M);
     }
@@ -42,7 +46,7 @@ public abstract class Cluster<P extends Point> implements Copy {
         List<Point> points = Stream.concat(
                 this.points.stream(),
                 other.points.stream()
-        ).map(Point::copy).toList();
+        ).map(r -> (Point) r.getXYZ()).toList();
 
         Vec3 center = (Vec3) Vec3.midpoint(points);
 
@@ -51,17 +55,20 @@ public abstract class Cluster<P extends Point> implements Copy {
     }
 
     /**
-     * @param other
-     * This function assumes `other` parameter is never going to be used again,
-     * and thus does not copy its points
+     * @param other This function assumes `other` parameter is never going to be used again,
+     *              and thus does not copy its points
      */
     public void merge(Cluster<P> other) {
         totalRateKbps += other.totalRateKbps;
         points.addAll(other.points);
-        center = Vec3.midpoint(points);
+        center = Vec3.midpoint(points.stream().map(r -> (Point) r.getXYZ()).toList());
     }
 
     public Point getCenter() {
         return center;
+    }
+
+    public List<Record> getPoints() {
+        return points;
     }
 }

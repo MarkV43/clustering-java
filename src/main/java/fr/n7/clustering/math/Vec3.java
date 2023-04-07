@@ -1,9 +1,13 @@
 package fr.n7.clustering.math;
 
+import fr.n7.clustering.Record;
+
+import java.util.Random;
+
 public class Vec3 extends Point {
-    private final double x;
-    private final double y;
-    private final double z;
+    public final double x;
+    public final double y;
+    public final double z;
 
     /*public Vec3() {
         this.x = this.y = this.z = 0;
@@ -43,6 +47,12 @@ public class Vec3 extends Point {
     }
 
     @Override
+    public double cross(Point other) {
+        Vec3 rhs = (Vec3) other;
+        return x * rhs.x + y * rhs.y + z * rhs.z;
+    }
+
+    @Override
     public double distanceSquaredTo(Point other) {
         Vec3 rhs = (Vec3) other;
         return sub(rhs).normSquared();
@@ -65,5 +75,22 @@ public class Vec3 extends Point {
     @Override
     public Point normalized() {
         return mul(invSqrt(normSquared()));
+    }
+
+    public static Vec3 random(Random rand) {
+        Vec3 pos;
+        do {
+            pos = new Vec3(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
+        } while (pos.normSquared() > 1.0);
+        return (Vec3) pos.normalized();
+    }
+
+    @Override
+    public String toString() {
+        return "Vec3{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
     }
 }
