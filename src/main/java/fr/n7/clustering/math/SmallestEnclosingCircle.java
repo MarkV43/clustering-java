@@ -20,112 +20,100 @@
  */
 package fr.n7.clustering.math;
 
-import fr.n7.clustering.math.Circle;
-import fr.n7.clustering.math.Vec2;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 
 public final class SmallestEnclosingCircle {
 
-    /*
-     * Returns the smallest circle that encloses all the given Vec2s. Runs in expected O(n) time, randomized.
-     * Note: If 0 Vec2s are given, null is returned. If 1 Vec2 is given, a circle of radius 0 is returned.
+    public static void main(String[] args) {
+        List<Vec2> points = List.of(
+                new Vec2(-0.104, 0.013),
+                new Vec2(0.009, -0.12),
+                new Vec2(-0.0828511, -0.071489599),
+                new Vec2(-0.0834241, -0.140811835)
+        );
+
+        var c = SmallestEnclosingCircle.makeCircle(points);
+        System.out.println(c);
+    }
+
+    public static Circle makeCircle(List<Vec2> points) {
+        var p = new ArrayList<>(points);
+        var r = new ArrayList<Vec2>(3);
+        var random = new Random();
+
+        return welzl(p, r, random);
+    }
+
+    /**
+     * Returns the Smallest Circle that encloses all points in P
+     * @param P
+     * @param R
+     * @param random
+     * @return
      */
-    // Initially: No boundary Vec2s known
-    public static Circle makeCircle(List<Vec2> Vec2s) {
-        // Clone list to preserve the caller's data, randomize order
-        List<Vec2> shuffled = new ArrayList<>(Vec2s);
-        Collections.shuffle(shuffled, new Random());
+    private static Circle welzl(List<Vec2> P, List<Vec2> R, Random random) {
+        assert R.size() <= 3;
 
-        // Progressively add Vec2s to circle or recompute circle
-        Circle c = null;
-        for (int i = 0; i < shuffled.size(); i++) {
-            Vec2 p = shuffled.get(i);
-            if (c == null || !c.contains(p))
-                c = makeCircleOneVec2(shuffled.subList(0, i + 1), p);
+        if (P.isEmpty() || R.size() == 3)
+            return trivial(R);
+
+        int index = random.nextInt(P.size()); // choose p in P (randomly and uniformly)
+        Vec2 p = P.get(index);
+
+        var newP = P.stream().filter(k -> k != p).toList();
+
+        Circle D = welzl(newP, R, random); // D := welzl(P - {p}, R)
+
+        if (D != null && D.contains(p))
+            return D;
+
+        var newR = Stream.concat(R.stream(), Stream.of(p)).toList();
+        return welzl(newP, newR, random);
+    }
+
+    private static Circle trivial(List<Vec2> R) {
+        Circle center = null;
+        switch (R.size()) {
+            case 0:
+                break;
+            case 1:
+                center = new Circle(R.get(0), 0);
+                break;
+            case 2:
+                var ct = (Vec2) R.get(0).add(R.get(1)).mul(0.5);
+                var diam = R.get(0).distanceTo(R.get(1));
+                center = new Circle(ct, diam * 0.5);
+                break;
+            case 3:
+                var b = (Vec2) R.get(0);
+                var c = (Vec2) R.get(1);
+                var d = (Vec2) R.get(2);
+
+                var temp = c.normSquared();
+                var bc = (b.normSquared() - temp) / 2;
+                var cd = (temp - d.normSquared()) / 2;
+                var det = (b.x - c.x) * (c.y - d.y) - (c.x - d.x) * (b.y - c.y);
+
+                if (Math.abs(det) < 1e-10)
+                    return null;
+
+                var cx = (bc * (c.y - d.y) - cd * (b.y - c.y)) / det;
+                var cy = ((b.x - c.x) * cd - (c.x - d.x) * bc) / det;
+
+                var pos = new Vec2(cx, cy);
+
+                var radius = pos.distanceTo(b);
+
+                center = new Circle(pos, radius);
+                break;
+            default:
+                throw new RuntimeException("There is no \"trivial\" solution for a circle with 4 or more points in 2D");
         }
-        return c;
-    }
-
-
-    // One boundary Vec2 known
-    private static Circle makeCircleOneVec2(List<Vec2> Vec2s, Vec2 p) {
-        Circle c = new Circle(p, 0);
-        for (int i = 0; i < Vec2s.size(); i++) {
-            Vec2 q = Vec2s.get(i);
-            if (!c.contains(q)) {
-                if (c.r == 0)
-                    c = makeDiameter(p, q);
-                else
-                    c = makeCircleTwoVec2s(Vec2s.subList(0, i + 1), p, q);
-            }
-        }
-        return c;
-    }
-
-
-    // Two boundary Vec2s known
-    private static Circle makeCircleTwoVec2s(List<Vec2> Vec2s, Vec2 p, Vec2 q) {
-        Circle circ = makeDiameter(p, q);
-        Circle left  = null;
-        Circle right = null;
-
-        // For each Vec2 not in the two-Vec2 circle
-        Vec2 pq = (Vec2) q.sub(p);
-        for (Vec2 r : Vec2s) {
-            if (circ.contains(r))
-                continue;
-
-            // Form a circumcircle and classify it on left or right side
-            double cross = pq.cross(r.sub(p));
-            Circle c = makeCircumcircle(p, q, r);
-            if (c == null)
-                continue;
-            else if (cross > 0 && (left == null || pq.cross(c.c.sub(p)) > pq.cross(left.c.sub(p))))
-                left = c;
-            else if (cross < 0 && (right == null || pq.cross(c.c.sub(p)) < pq.cross(right.c.sub(p))))
-                right = c;
-        }
-
-        // Select which circle to return
-        if (left == null && right == null)
-            return circ;
-        else if (left == null)
-            return right;
-        else if (right == null)
-            return left;
-        else
-            return left.r <= right.r ? left : right;
-    }
-
-
-    static Circle makeDiameter(Vec2 a, Vec2 b) {
-        // This line has changed:
-        // Vec2 c = new Vec2((a.x + b.x) / 2, (a.y + b.y) / 2);
-        Vec2 c = (Vec2) a.add(b).div(2).normalized();
-        return new Circle(c, Math.max(c.distanceTo(a), c.distanceTo(b)));
-    }
-
-
-    static Circle makeCircumcircle(Vec2 a, Vec2 b, Vec2 c) {
-        // Mathematical algorithm from Wikipedia: Circumscribed circle
-        double ox = (Math.min(Math.min(a.x, b.x), c.x) + Math.max(Math.max(a.x, b.x), c.x)) / 2;
-        double oy = (Math.min(Math.min(a.y, b.y), c.y) + Math.max(Math.max(a.y, b.y), c.y)) / 2;
-        double ax = a.x - ox,  ay = a.y - oy;
-        double bx = b.x - ox,  by = b.y - oy;
-        double cx = c.x - ox,  cy = c.y - oy;
-        double d = (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by)) * 2;
-        if (d == 0)
-            return null;
-        double x = ((ax*ax + ay*ay) * (by - cy) + (bx*bx + by*by) * (cy - ay) + (cx*cx + cy*cy) * (ay - by)) / d;
-        double y = ((ax*ax + ay*ay) * (cx - bx) + (bx*bx + by*by) * (ax - cx) + (cx*cx + cy*cy) * (bx - ax)) / d;
-        Vec2 p = new Vec2(ox + x, oy + y);
-        double r = Math.max(Math.max(p.distanceTo(a), p.distanceTo(b)), p.distanceTo(c));
-        return new Circle(p, r);
+        return center;
     }
 
 }

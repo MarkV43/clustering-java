@@ -2,6 +2,7 @@ package fr.n7.clustering.gui;
 
 import fr.n7.clustering.Main;
 import fr.n7.clustering.Record;
+import fr.n7.clustering.cluster.Cluster;
 import fr.n7.clustering.cluster.ClusterXYZ;
 import fr.n7.clustering.gui.item.*;
 import fr.n7.clustering.math.Vec3;
@@ -312,9 +313,9 @@ public class MyWindow extends JFrame implements Runnable {
         }
 
         // Method
-        List<ClusterXYZ> clusters;
+        List<Cluster> clusters;
         if (item1 instanceof MethodOp met) {
-            Method<ClusterXYZ, Vec3> meth;
+            Method meth;
             switch (met.number) {
                 case 1 -> meth = new Method1();
                 case 2 -> meth = new Method2();

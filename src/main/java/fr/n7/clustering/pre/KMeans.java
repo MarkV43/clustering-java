@@ -5,6 +5,7 @@ import fr.n7.clustering.math.Point;
 import fr.n7.clustering.math.Vec3;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -12,14 +13,26 @@ import java.util.stream.Stream;
 
 public abstract class KMeans {
     public static List<List<Record>> separate(int k, List<Record> data) {
-        Random rand = new Random();
-        /*List<Record> centers = new ArrayList<>(Stream.generate(() -> {
-            Vec3 pos;
+        /*Random rand = new Random();
+        List<Record> centers = new ArrayList<>();
+        int[] selected = new int[k];
+        Arrays.fill(selected, -1);
+        for (int i = 0; i < k; i++) {
+            int index;
+            boolean unique;
             do {
-                pos = new Vec3(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
-            } while (pos.normSquared() > 1.0);
-            return new Record((Vec3) pos.normalized());
-        }).limit(k).toList());*/
+                index = rand.nextInt(data.size());
+                unique = true;
+                for (int j : selected) {
+                    if (j == index) {
+                        unique = false;
+                        break;
+                    }
+                }
+            } while(!unique);
+            centers.add(data.get(index));
+        }*/
+
         List<Record> centers = new ArrayList<>(data.subList(0, k));
 
         var ref = new Object() {
@@ -68,6 +81,6 @@ public abstract class KMeans {
             }
         } while (!stop.get());
 
-        return ref.regions;
+        return ref.regions.stream().filter(l -> l.size() > 0).toList();
     }
 }

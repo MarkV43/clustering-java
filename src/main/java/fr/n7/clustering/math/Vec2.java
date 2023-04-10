@@ -50,4 +50,12 @@ public class Vec2 extends Point {
     public Point copy() {
         return new Vec2(x, y);
     }
+
+    @Override
+    public String toString() {
+        return "Vec3{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

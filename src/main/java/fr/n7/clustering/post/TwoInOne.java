@@ -14,44 +14,43 @@ import java.util.stream.IntStream;
 public abstract class TwoInOne {
     private TwoInOne() {}
 
-    public static <C extends Cluster<P>, P extends Point> List<C> treat(List<C> clusters) {
+    public static List<Cluster> treat(List<Cluster> clusters) {
         int clustersSize = clusters.size();
 
-        List<C> newClusters = new ArrayList<>(30_000);
+        List<Cluster> newClusters = new ArrayList<>(30_000);
         boolean[] deleted = new boolean[clustersSize];
         Arrays.fill(deleted, false);
 
         for (int i = 0; i < clustersSize; i++) {
             if (deleted[i]) continue;
             deleted[i] = true;
-            C cl1 = clusters.get(i);
+            Cluster cl1 = clusters.get(i);
             newClusters.add(cl1);
 
             for (int j = i + 1; j < clustersSize; j++) {
                 if (deleted[j]) continue;
 
-                C cl2 = clusters.get(j);
-                if (!cl1.canMergeWith(cl2)) continue;
+                Cluster cl2 = clusters.get(j);
 
-                cl1.merge(cl2);
-                deleted[j] = true;
+                if (cl1.tryMergeWith(cl2))
+                    deleted[j] = true;
             }
         }
 
         return newClusters;
     }
 
-    public static <C extends Cluster<P>, P extends Point> List<C> treat2(List<C> clusters) {
+    public static List<Cluster> treat2(List<Cluster> clusters) {
         int clustersSize = clusters.size();
 
-        List<C> newClusters = new ArrayList<>(30_000);
+        List<Cluster> newClusters = new ArrayList<>(30_000);
         boolean[] deleted = new boolean[clustersSize];
         Arrays.fill(deleted, false);
 
         for (int i = 0; i < clustersSize; i++) {
             if (deleted[i]) continue;
             deleted[i] = true;
-            C cl1 = clusters.get(i);
+            Cluster cl1 = clusters.get(i);
             newClusters.add(cl1);
 
             IntStream.range(i+1, clustersSize).parallel()
@@ -61,11 +60,10 @@ public abstract class TwoInOne {
                     .sorted(Comparator.comparing(Pair::getRight))
                     .mapToInt(Pair::getLeft)
                     .forEachOrdered(j -> {
-                        C cl2 = clusters.get(j);
-                        if (!cl1.canMergeWith(cl2)) return;
+                        Cluster cl2 = clusters.get(j);
 
-                        cl1.merge(cl2);
-                        deleted[j] = true;
+                        if (cl1.tryMergeWith(cl2))
+                            deleted[j] = true;
                     });
         }
 

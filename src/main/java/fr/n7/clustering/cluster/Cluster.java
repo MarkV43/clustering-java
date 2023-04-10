@@ -8,7 +8,7 @@ import fr.n7.clustering.math.Vec3;
 import java.util.List;
 import java.util.stream.Stream;
 
-public abstract class Cluster<P extends Point> implements Copy {
+public abstract class Cluster implements Copy {
     public static final double MAX_RATE_KBPS = 4e9;
     public static final double MAX_RADIUS_M = 45e3;
     public static final double EARTH_RADIUS_M = 6_371_009;
@@ -35,7 +35,14 @@ public abstract class Cluster<P extends Point> implements Copy {
         return dist < MAX_RADIUS_M * MAX_RADIUS_M / (EARTH_RADIUS_M * EARTH_RADIUS_M);
     }
 
-    public boolean canMergeWith(Cluster<P> other) {
+    public boolean tryAddPoint(Record rec) {
+        boolean can = canAddPoint(rec);
+        if (can)
+            addPoint(rec);
+        return can;
+    }
+
+    public boolean canMergeWith(Cluster other) {
         if (this.totalRateKbps + other.totalRateKbps > MAX_RATE_KBPS) return false;
 
         double distSq = this.center.distanceSquaredTo(other.center);
@@ -58,10 +65,17 @@ public abstract class Cluster<P extends Point> implements Copy {
      * @param other This function assumes `other` parameter is never going to be used again,
      *              and thus does not copy its points
      */
-    public void merge(Cluster<P> other) {
+    public void merge(Cluster other) {
         totalRateKbps += other.totalRateKbps;
         points.addAll(other.points);
         center = Vec3.midpoint(points.stream().map(r -> (Point) r.getXYZ()).toList());
+    }
+
+    public boolean tryMergeWith(Cluster other) {
+        boolean can = canMergeWith(other);
+        if (can)
+            merge(other);
+        return can;
     }
 
     public Point getCenter() {
@@ -71,4 +85,6 @@ public abstract class Cluster<P extends Point> implements Copy {
     public List<Record> getPoints() {
         return points;
     }
+
+    public abstract Stream<Cluster> split(int amount);
 }

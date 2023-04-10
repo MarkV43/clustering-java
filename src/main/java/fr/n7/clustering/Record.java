@@ -24,8 +24,8 @@ public class Record implements Copy {
         this.service = service;
     }
     public Record(String[] csvRow) {
-        lon = Double.parseDouble(csvRow[0]);
-        lat = Double.parseDouble(csvRow[1]);
+        lon = Math.toRadians(Double.parseDouble(csvRow[0]));
+        lat = Math.toRadians(Double.parseDouble(csvRow[1]));
         pir = Double.parseDouble(csvRow[2]);
         cir = Double.parseDouble(csvRow[3]);
         service = Short.parseShort(csvRow[4]);
@@ -41,12 +41,9 @@ public class Record implements Copy {
 
     public Vec3 getXYZ() {
         if (xyz == null) {
-            double rLat = Math.toRadians(lat);
-            double rLon = Math.toRadians(lon);
-
-            double x = Math.sin(rLat) * Math.cos(rLon);
-            double y = Math.sin(rLat) * Math.sin(rLon);
-            double z = Math.cos(rLat);
+            double x = Math.sin(lat) * Math.cos(lon);
+            double y = Math.sin(lat) * Math.sin(lon);
+            double z = Math.cos(lat);
 
             xyz = new Vec3(x, y, z);
         }

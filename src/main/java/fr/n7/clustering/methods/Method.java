@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
-public abstract class Method<C extends Cluster<P>, P extends Point> {
+public abstract class Method {
     /*public List<ClusterXYZ> run_xyz(List<List<Vec3>> regions, short nRegions) {
         // Clusters
         Instant t2 = Instant.now();
@@ -47,5 +47,5 @@ public abstract class Method<C extends Cluster<P>, P extends Point> {
         System.out.println("Overall, took " + Duration.between(t0, Instant.now()).toMillis() + " ms\n");
     }*/
 
-    public abstract List<C> cluster_xyz(List<Record> records);
+    public abstract List<Cluster> cluster_xyz(List<Record> records);
 }
