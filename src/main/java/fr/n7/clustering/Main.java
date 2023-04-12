@@ -5,12 +5,9 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import fr.n7.clustering.cluster.Cluster;
 import fr.n7.clustering.cluster.ClusterXYZ;
-import fr.n7.clustering.gui.MyWindow;
-import fr.n7.clustering.math.Vec3;
 import fr.n7.clustering.methods.*;
 import fr.n7.clustering.post.ClusterCutting;
 import fr.n7.clustering.post.TwoInOne;
-import fr.n7.clustering.pre.ConnectedZones;
 import fr.n7.clustering.pre.DensitySort;
 import fr.n7.clustering.pre.KMeans;
 import org.apache.commons.cli.*;
@@ -61,25 +58,10 @@ public class Main {
 
         List<Record> data = readData();
 
-        if (cmd.hasOption(ui)) {
-            System.out.println("Opening ui...");
-            MyWindow.start();
-
-        } else {
-            int m = Integer.parseInt(cmd.getOptionValue(method));
-            int pr = Integer.parseInt(cmd.getOptionValue(pre));
-            String po = cmd.getOptionValue(post);
-            run_xyz(m, pr, data);
-        }
-
-//        System.out.println(Arrays.toString(cmd.getOptionValues("ui")));
-
-//        int method = Integer.parseInt(args[0]);
-//        short regions = Short.parseShort(args[1]);
-
-//        System.out.println("Using method " + method + ", with " + regions + " regions");
-
-//        run_xyz(method, regions, data);
+        int m = Integer.parseInt(cmd.getOptionValue(method));
+        int pr = Integer.parseInt(cmd.getOptionValue(pre));
+        String po = cmd.getOptionValue(post);
+        run_xyz(m, pr, data);
     }
 
     public static List<Record> readData() {
@@ -107,20 +89,22 @@ public class Main {
         System.out.println("Using method " + method + ", with " + nRegions + " regions");
 
         // Pre-treatment
-        List<List<Record>> regions;
+        List<List<Record>> regions = List.of(data);
 
         Instant t0 = Instant.now();
 
-        if (nRegions <= 1)
-            regions = List.of(data);
-        else {
+        if (nRegions <= 1) {
+            System.out.println("Starting Density Sort");
+            regions = new DensitySort().treat(regions);
+            System.out.println("Finished Density Sort");
+        } else {
             System.out.println("Starting KMeans");
 
-            regions = KMeans.separate(nRegions, data);
+            regions = new KMeans(nRegions).treat(regions);
 
             System.out.println("Finished KMeans, Starting Density Sort");
 
-            regions = regions.parallelStream().map(DensitySort::sort).toList();
+            regions = new DensitySort().treat(regions);
             Instant t1 = Instant.now();
 
             System.out.println("Finished k-means in " + Duration.between(t0, t1).toMillis() + " ms");
@@ -134,7 +118,6 @@ public class Main {
             case 1 -> meth = new Method1();
             case 2 -> meth = new Method2();
             case 3 -> meth = new Method3();
-            case 4 -> meth = new Method4();
             default -> throw new RuntimeException("Unknown method number");
         }
 
@@ -144,7 +127,13 @@ public class Main {
 
         List<Cluster> clusters = regions
                 .parallelStream()
-                .flatMap(records -> meth.cluster_xyz(records).stream())
+                .flatMap(records -> {
+                    try {
+                        return meth.cluster(records, ClusterXYZ.class).stream();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .toList();
 
         System.out.printf("Clustering finished. %d\n", clusters.size());
@@ -157,7 +146,7 @@ public class Main {
         int old;
         do {
             old = clusters.size();
-            clusters = TwoInOne.treat(clusters);
+            clusters = new TwoInOne().treat(clusters);
             System.out.println("Current size: " + clusters.size());
         } while (old != clusters.size());
 
@@ -165,13 +154,13 @@ public class Main {
 
         System.out.printf("Clustering finished. %d\n", clusters.size());
 
-        clusters = ClusterCutting.run_xyz(clusters);
+        clusters = new ClusterCutting().treat(clusters);
 
         System.out.printf("Cluster Cutting finished. %d\n", clusters.size());
 
         do {
             old = clusters.size();
-            clusters = TwoInOne.treat(clusters);
+            clusters = new TwoInOne().treat(clusters);
         } while (old != clusters.size());
 
         System.out.printf("2 in 1 finished. %d\n", clusters.size());

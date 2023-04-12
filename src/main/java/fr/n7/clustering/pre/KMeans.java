@@ -11,27 +11,16 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
-public abstract class KMeans {
-    public static List<List<Record>> separate(int k, List<Record> data) {
-        /*Random rand = new Random();
-        List<Record> centers = new ArrayList<>();
-        int[] selected = new int[k];
-        Arrays.fill(selected, -1);
-        for (int i = 0; i < k; i++) {
-            int index;
-            boolean unique;
-            do {
-                index = rand.nextInt(data.size());
-                unique = true;
-                for (int j : selected) {
-                    if (j == index) {
-                        unique = false;
-                        break;
-                    }
-                }
-            } while(!unique);
-            centers.add(data.get(index));
-        }*/
+public class KMeans implements PreLayer {
+    final int k;
+
+    public KMeans(int k) {
+        this.k = k;
+    }
+
+    public List<List<Record>> treat(List<List<Record>> _data) {
+        assert _data.size() == 1;
+        var data = _data.get(0);
 
         List<Record> centers = new ArrayList<>(data.subList(0, k));
 
@@ -82,5 +71,10 @@ public abstract class KMeans {
         } while (!stop.get());
 
         return ref.regions.stream().filter(l -> l.size() > 0).toList();
+    }
+
+    @Override
+    public boolean equals(PreLayer other) {
+        return other instanceof KMeans && k == ((KMeans) other).k;
     }
 }

@@ -2,15 +2,16 @@ package fr.n7.clustering.methods;
 
 import fr.n7.clustering.Record;
 import fr.n7.clustering.cluster.Cluster;
-import fr.n7.clustering.cluster.ClusterXYZ;
-import fr.n7.clustering.math.Vec3;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Method2 extends Method {
     @Override
-    public List<Cluster> cluster_xyz(List<Record> records) {
+    public List<Cluster> cluster(List<Record> records, Class<?> clazz) throws Exception {
+        Constructor<?> constructor = clazz.getConstructor(Record.class);
+
         List<Cluster> clusters = new ArrayList<>(30_000);
         int size = records.size();
 
@@ -29,7 +30,8 @@ public class Method2 extends Method {
             deleted[i] = true;
             Record record = records.get(i);
 
-            ClusterXYZ cl = new ClusterXYZ(record);
+//            ClusterXYZ cl = new ClusterXYZ(record);
+            Cluster cl = (Cluster) constructor.newInstance(record);
 
             for (int j = i+1; j < size; j++) {
                 if (deleted[j]) continue;

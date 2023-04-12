@@ -1,16 +1,8 @@
 package fr.n7.clustering.methods;
 
 import fr.n7.clustering.Record;
-import fr.n7.clustering.cluster.ClusterXYZ;
-import fr.n7.clustering.math.Vec3;
-import fr.n7.clustering.post.ClusterCutting;
-import fr.n7.clustering.pre.KMeans;
-import fr.n7.clustering.post.TwoInOne;
 import fr.n7.clustering.cluster.Cluster;
-import fr.n7.clustering.math.Point;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 
 public abstract class Method {
@@ -46,6 +38,5 @@ public abstract class Method {
 
         System.out.println("Overall, took " + Duration.between(t0, Instant.now()).toMillis() + " ms\n");
     }*/
-
-    public abstract List<Cluster> cluster_xyz(List<Record> records);
+    public abstract List<Cluster> cluster(List<Record> records, Class<?> clazz) throws Exception;
 }

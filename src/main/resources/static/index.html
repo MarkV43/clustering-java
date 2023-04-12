@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Home page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<nav>
+    <h2>Clustering Project</h2>
+    <div class="spacer"></div>
+    <div class="dropdown">
+        <button>Pre</button>
+        <div>
+            <button onclick="createCard('sort')">Sort</button>
+            <button onclick="createCard('region')">Region</button>
+            <button onclick="createCard('zones')">Connected Zones</button>
+        </div>
+    </div>
+    <div class="dropdown">
+        <button>Post</button>
+        <div>
+            <button onclick="createCard('2in1')">Two In One</button>
+            <button onclick="createCard('cutting')">Cutting</button>
+        </div>
+    </div>
+    <div class="spacer"></div>
+    <button onclick="run()">Run</button>
+</nav>
+
+<main>
+    <div class="container">
+        <div class="meta-container" id="pre"></div>
+        <div id="clustering" class="card"></div>
+        <div class="meta-container" id="post"></div>
+    </div>
+</main>
+
+<script src="js/scroll.js"></script>
+<script src="js/logic.js"></script>
+<script src="js/api.js"></script>
+</body>
+</html>

@@ -7,10 +7,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class ConnectedZones {
-    private ConnectedZones() {}
+public class ConnectedZones implements PreLayer  {
+    public ConnectedZones() {}
 
-    public static List<List<Record>> separate(List<Record> data) {
+    @Override
+    public List<List<Record>> treat(List<List<Record>> _data) {
+        assert _data.size() == 1;
+        var data = _data.get(0);
+
         int[] zones = new int[data.size()];
         Arrays.fill(zones, -1);
 
@@ -71,5 +75,10 @@ public abstract class ConnectedZones {
         }
 
         return result;
+    }
+
+    @Override
+    public boolean equals(PreLayer other) {
+        return other instanceof ConnectedZones;
     }
 }

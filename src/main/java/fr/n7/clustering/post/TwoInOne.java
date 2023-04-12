@@ -1,7 +1,6 @@
 package fr.n7.clustering.post;
 
 import fr.n7.clustering.cluster.Cluster;
-import fr.n7.clustering.math.Point;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -11,10 +10,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public abstract class TwoInOne {
-    private TwoInOne() {}
+public class TwoInOne implements PostLayer {
+    public TwoInOne() {}
 
-    public static List<Cluster> treat(List<Cluster> clusters) {
+    @Override
+    public List<Cluster> treat(List<Cluster> clusters) {
         int clustersSize = clusters.size();
 
         List<Cluster> newClusters = new ArrayList<>(30_000);
@@ -40,7 +40,7 @@ public abstract class TwoInOne {
         return newClusters;
     }
 
-    public static List<Cluster> treat2(List<Cluster> clusters) {
+    public static List<Cluster> noisy(List<Cluster> clusters) {
         int clustersSize = clusters.size();
 
         List<Cluster> newClusters = new ArrayList<>(30_000);
@@ -68,5 +68,10 @@ public abstract class TwoInOne {
         }
 
         return newClusters;
+    }
+
+    @Override
+    public boolean equals(PostLayer other) {
+        return other instanceof TwoInOne;
     }
 }

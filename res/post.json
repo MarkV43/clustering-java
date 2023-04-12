@@ -1,0 +1,39 @@
+{
+  "pre": [
+    {
+      "name": "sort",
+      "by": "pir",
+      "order": "ascending"
+    },
+    {
+      "name": "sort",
+      "by": "service",
+      "order": "ascending"
+    },
+    {
+      "name": "regions",
+      "amount": 10
+    },
+    {
+      "name": "sort",
+      "by": "density",
+      "order": "ascending"
+    }
+  ],
+  "clustering": {
+    "method": "3",
+    "algorithm": "XYZ"
+  },
+  "post": [
+    {
+      "name": "2in1"
+    },
+    {
+      "name": "cutting",
+      "threshold": 10
+    },
+    {
+      "name": "2in1"
+    }
+  ]
+}

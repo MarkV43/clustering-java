@@ -58,8 +58,8 @@ public class ClusterXYZ extends Cluster {
             return Stream.of((Cluster) this.copy());
         }
 
-        List<Cluster> newList = KMeans
-                .separate((short) 2, points)
+        List<Cluster> newList = new KMeans(2)
+                .treat(List.of(points))
                 .stream()
                 .map(l -> (Cluster) new ClusterXYZ(l))
                 .toList();
