@@ -11,6 +11,7 @@ import fr.n7.clustering.post.TwoInOne;
 import fr.n7.clustering.pre.DensitySort;
 import fr.n7.clustering.pre.KMeans;
 import fr.n7.clustering.pre.Sort;
+import fr.n7.clustering.web.DemoApplication;
 import org.apache.commons.cli.*;
 
 import java.io.FileReader;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Options options = new Options();
+        /*Options options = new Options();
 
         OptionGroup og = new OptionGroup();
         og.setRequired(true);
@@ -62,7 +63,9 @@ public class Main {
         int m = Integer.parseInt(cmd.getOptionValue(method));
         int pr = Integer.parseInt(cmd.getOptionValue(pre));
         String po = cmd.getOptionValue(post);
-        run_xyz(m, pr, data);
+        run_xyz(m, pr, data);*/
+
+        DemoApplication.main(args);
     }
 
     public static List<Record> readData() {
