@@ -2,7 +2,7 @@ package fr.n7.clustering.web;
 
 import fr.n7.clustering.cluster.ClusterEnc;
 import fr.n7.clustering.cluster.ClusterXYZ;
-import fr.n7.clustering.methods.Method;
+import fr.n7.clustering.methods.IMethod;
 import fr.n7.clustering.methods.Method1;
 import fr.n7.clustering.methods.Method2;
 import fr.n7.clustering.methods.Method3;
@@ -12,12 +12,12 @@ import fr.n7.clustering.post.TwoInOne;
 import fr.n7.clustering.pre.ConnectedZones;
 import fr.n7.clustering.pre.KMeans;
 import fr.n7.clustering.pre.PreLayer;
+import fr.n7.clustering.pre.Sort;
 import org.apache.commons.lang3.NotImplementedException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class CardsBuilder extends Thread {
@@ -41,8 +41,27 @@ public class CardsBuilder extends Thread {
             String name = obj.getString("name");
             PreLayer layer;
             switch (name) {
-                case "sort" -> throw new NotImplementedException("We don't have Sort layer yet");
-                case "regions" -> layer = new KMeans(obj.getInt("amount"));
+                case "sort" -> {
+                    String sBy = obj.getString("by");
+                    String sOrder = obj.getString("order");
+                    Sort.SortBy by;
+                    Sort.SortOrder order;
+                    switch (sBy.toLowerCase()) {
+                        case "service" -> by = Sort.SortBy.Service;
+                        case "cir" -> by = Sort.SortBy.CIR;
+                        case "pir" -> by = Sort.SortBy.PIR;
+                        case "density" -> by = Sort.SortBy.Density;
+                        default -> throw new RuntimeException("Unknown sort by \"" + sBy + '"');
+                    }
+                    switch (sOrder.toLowerCase()) {
+                        case "ascending" -> order = Sort.SortOrder.Ascending;
+                        case "descending" -> order = Sort.SortOrder.Descending;
+                        default -> throw new RuntimeException("Unknown sort order \"" + sOrder + '"');
+                    }
+
+                    layer = new Sort(by, order);
+                }
+                case "region" -> layer = new KMeans(obj.getInt("amount"));
                 case "zones" -> layer = new ConnectedZones();
                 default -> throw new RuntimeException("Unknown layer \"" + name + '"');
             }
@@ -57,7 +76,7 @@ public class CardsBuilder extends Thread {
             default -> throw new RuntimeException("Unknown algorithm \"" + clusteringObj.getString("algorithm") + '"');
         }
 
-        Method clustering;
+        IMethod clustering;
         switch (clusteringObj.getString("method")) {
             case "1" -> clustering = new Method1();
             case "2" -> clustering = new Method2();

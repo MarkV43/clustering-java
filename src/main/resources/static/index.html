@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/main.css" rel="stylesheet" type="text/css">
+<!--    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />-->
 </head>
 <body>
 <nav>
@@ -12,21 +13,26 @@
     <div class="spacer"></div>
     <div class="dropdown">
         <button>Pre</button>
-        <div>
-            <button onclick="createCard('sort')">Sort</button>
-            <button onclick="createCard('region')">Region</button>
-            <button onclick="createCard('zones')">Connected Zones</button>
+        <div class="dropdown-hitbox">
+            <div class="dropdown-content">
+                <button onclick="createCard('sort')">Sort</button>
+                <button onclick="createCard('region')">Region</button>
+                <button onclick="createCard('zones')">Connected Zones</button>
+            </div>
         </div>
     </div>
     <div class="dropdown">
         <button>Post</button>
-        <div>
-            <button onclick="createCard('2in1')">Two In One</button>
-            <button onclick="createCard('cutting')">Cutting</button>
+        <div class="dropdown-hitbox">
+            <div class="dropdown-content">
+                <button onclick="createCard('2in1')">Two In One</button>
+                <button onclick="createCard('cutting')">Cutting</button>
+            </div>
         </div>
     </div>
     <div class="spacer"></div>
-    <button onclick="run()">Run</button>
+    <button onclick="run()" id="run">Run</button>
+    <button onclick="stop()" id="stop">Stop</button>
 </nav>
 
 <main>
@@ -38,7 +44,8 @@
 </main>
 
 <script src="js/scroll.js"></script>
-<script src="js/logic.js"></script>
-<script src="js/api.js"></script>
+<script src="js/drag.js"></script>
+<script src="js/structure.js"></script>
+<script src="js/connection.js"></script>
 </body>
 </html>

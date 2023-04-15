@@ -8,7 +8,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Method3 extends Method {
+public class Method3 extends IMethod {
     @Override
     public List<Cluster> cluster(List<Record> records, Class<?> clazz) throws Exception {
         Constructor<?> constructor = clazz.getConstructor(Record.class);
@@ -63,5 +63,10 @@ public class Method3 extends Method {
         }
 
         return clusters;
+    }
+
+    @Override
+    public boolean equals(IMethod other) {
+        return other instanceof Method3;
     }
 }

@@ -33,9 +33,15 @@ function createCard(card) {
             return;
     }
 
+    const id = crypto.randomUUID();
+
     const div = document.createElement("div");
     div.classList.add("card");
     div.dataset.type = card;
+    div.draggable = true;
+    div.id = id;
+    div.addEventListener("dragstart", dragstart_handler);
+    div.addEventListener("drop", drop_handler);
 
     const data = createCardData(() => container.removeChild(div));
 
@@ -45,20 +51,29 @@ function createCard(card) {
 }
 
 function createCardData(delFunc) {
+    const div = document.createElement("div");
+    div.classList.add("data");
+
+    const label = document.createElement("label");
+    label.textContent = "";
+
     const del = document.createElement("button");
     del.textContent = "Delete";
     del.classList.add("delete");
 
     del.addEventListener("click", delFunc);
 
-    return del;
+    div.append(label, del);
+
+    return div;
 }
 
 /**
  * @param {string} name
  * @param {string[]} options
+ * @param {string} defaultOption
  */
-function createSelect(name, options) {
+function createSelect(name, options, defaultOption = null) {
     const uuid = crypto.randomUUID();
 
     const field = document.createElement("div");
@@ -72,6 +87,8 @@ function createSelect(name, options) {
         const opt = document.createElement("option");
         opt.value = op.toLowerCase();
         opt.textContent = op;
+        if (defaultOption !== null && opt.value === defaultOption.toLowerCase())
+            opt.defaultSelected = true;
         return opt;
     }));
 
@@ -105,9 +122,9 @@ function createSortCard() {
     const label = document.createElement("label");
     label.textContent = "Sort";
 
-    const field1 = createSelect("By: ", ["Density", "PIR", "CIR", "Service"])
+    const field1 = createSelect("By: ", ["Density", "PIR", "CIR", "Service"], "PIR")
 
-    const field2 = createSelect("Order: ", ["Ascending", "Descending"]);
+    const field2 = createSelect("Order: ", ["Ascending", "Descending"], "Descending");
 
     return [label, field1, field2];
 }
@@ -151,15 +168,17 @@ function setupClustering() {
     label.textContent = "Clustering";
 
     const field1 = createSelect("Method:", ["1", "2", "3"]);
-    const field2 = createSelect("Algorithm:", ["LatLon", "XYZ", "Circle"]);
+    const field2 = createSelect("Algorithm:", ["LatLon", "XYZ", "Circle"], "xyz");
 
     method.append(label, field1, field2);
 }
 
 createCard("sort");
 createCard("region");
-createCard("zones");
+// createCard("zones");
 createCard("2in1");
-createCard("cutting");
+// createCard("cutting");
 setupClustering();
 
+preContainer.addEventListener("dragover", dragover_handler);
+postContainer.addEventListener("dragover", dragover_handler);

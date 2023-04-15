@@ -10,6 +10,7 @@ import fr.n7.clustering.post.ClusterCutting;
 import fr.n7.clustering.post.TwoInOne;
 import fr.n7.clustering.pre.DensitySort;
 import fr.n7.clustering.pre.KMeans;
+import fr.n7.clustering.pre.Sort;
 import org.apache.commons.cli.*;
 
 import java.io.FileReader;
@@ -95,7 +96,7 @@ public class Main {
 
         if (nRegions <= 1) {
             System.out.println("Starting Density Sort");
-            regions = new DensitySort().treat(regions);
+            regions = new DensitySort(Sort.SortOrder.Ascending).treat(regions);
             System.out.println("Finished Density Sort");
         } else {
             System.out.println("Starting KMeans");
@@ -104,7 +105,7 @@ public class Main {
 
             System.out.println("Finished KMeans, Starting Density Sort");
 
-            regions = new DensitySort().treat(regions);
+            regions = new DensitySort(Sort.SortOrder.Ascending).treat(regions);
             Instant t1 = Instant.now();
 
             System.out.println("Finished k-means in " + Duration.between(t0, t1).toMillis() + " ms");
@@ -112,7 +113,7 @@ public class Main {
 
         // Method
 
-        Method meth;
+        IMethod meth;
 
         switch (method) {
             case 1 -> meth = new Method1();
@@ -136,7 +137,9 @@ public class Main {
                 })
                 .toList();
 
-        System.out.printf("Clustering finished. %d\n", clusters.size());
+        Instant t3 = Instant.now();
+
+        System.out.printf("Clustering finished. %d in %d ms\n", clusters.size(), Duration.between(t2, t3).toMillis());
 
         assert(clusters.stream().allMatch(cl -> cl.getPoints().size() > 0));
 

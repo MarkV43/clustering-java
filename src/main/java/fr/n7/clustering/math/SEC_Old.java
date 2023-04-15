@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+@SuppressWarnings("unused")
 public class SEC_Old {
     /*
      * Returns the smallest circle that encloses all the given Vec2s. Runs in expected O(n) time, randomized.

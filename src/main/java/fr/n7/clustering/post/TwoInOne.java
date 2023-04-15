@@ -40,6 +40,7 @@ public class TwoInOne implements PostLayer {
         return newClusters;
     }
 
+    @SuppressWarnings("unused")
     public static List<Cluster> noisy(List<Cluster> clusters) {
         int clustersSize = clusters.size();
 

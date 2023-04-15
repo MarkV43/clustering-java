@@ -6,7 +6,6 @@ import fr.n7.clustering.math.Point;
 import fr.n7.clustering.math.Vec3;
 import fr.n7.clustering.pre.KMeans;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -42,7 +41,6 @@ public class ClusterXYZ extends Cluster {
         return dist < MAX_RADIUS_M * MAX_RADIUS_M / (EARTH_RADIUS_M * EARTH_RADIUS_M);
     }
 
-    @Override
     public Copy copy() {
         return new ClusterXYZ(center, totalRateKbps, points.stream().map(Record::copy).toList());
     }

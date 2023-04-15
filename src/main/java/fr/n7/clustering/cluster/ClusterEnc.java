@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 public class ClusterEnc extends ClusterXYZ {
     private Matrix rotation;
     private Matrix inv_rotation;
-    private double radius;
 
     public ClusterEnc(Record point) {
         super(point);
@@ -65,7 +64,6 @@ public class ClusterEnc extends ClusterXYZ {
         Vec3 cl_center = new Vec3(circle.c.x, circle.c.y, 1);
         Vec3 center = rotation.mul(cl_center);
         this.center = center;
-        radius = circle.r;
 
         double lat = Math.acos(center.z);
         double lon = Math.atan2(center.y, center.x);
@@ -103,7 +101,6 @@ public class ClusterEnc extends ClusterXYZ {
         Vec3 cl_center = new Vec3(circle.c.x, circle.c.y, 1);
         Vec3 center = rotation.mul(cl_center);
         this.center = center;
-        radius = circle.r;
 
         /*this.points.forEach(p -> {
             Vec3 trans = inv_rotation.mul(p.getXYZ());
@@ -169,7 +166,6 @@ public class ClusterEnc extends ClusterXYZ {
         Vec3 cl_center = new Vec3(circle.c.x, circle.c.y, 1);
         Vec3 center = rotation.mul(cl_center);
         this.center = center;
-        radius = circle.r;
 
         double lat = Math.acos(center.z);
         double lon = Math.atan2(center.y, center.x);
