@@ -21,14 +21,6 @@ public class Circle {
     }
 
 
-    public boolean contains(Collection<Vec2> ps) {
-        for (Vec2 p : ps) {
-            if (!contains(p))
-                return false;
-        }
-        return true;
-    }
-
     public String toString() {
         return "Circle { c: " + c.toString() + ", r: " + r + " }";
     }

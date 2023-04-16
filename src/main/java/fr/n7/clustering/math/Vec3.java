@@ -1,7 +1,5 @@
 package fr.n7.clustering.math;
 
-import fr.n7.clustering.Record;
-
 import java.util.Random;
 
 public class Vec3 extends Point {

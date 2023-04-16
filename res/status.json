@@ -1,0 +1,23 @@
+{
+  "running": false,
+  "pre": [
+    {
+      "durationMs": 18,
+      "clusterAmount": -1
+    },
+    {
+      "durationMs": 41,
+      "clusterAmount": -1
+    }
+  ],
+  "clustering": {
+    "durationMs": 9114,
+    "clusterAmount": 13484
+  },
+  "post": [
+    {
+      "durationMs": 1035,
+      "clusterAmount": 10944
+    }
+  ]
+}

@@ -1,19 +1,11 @@
 package fr.n7.clustering.methods;
 
 import fr.n7.clustering.Record;
-import fr.n7.clustering.cluster.ClusterXYZ;
-import fr.n7.clustering.math.Vec3;
-import fr.n7.clustering.post.ClusterCutting;
-import fr.n7.clustering.pre.KMeans;
-import fr.n7.clustering.post.TwoInOne;
 import fr.n7.clustering.cluster.Cluster;
-import fr.n7.clustering.math.Point;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 
-public abstract class Method {
+public abstract class IMethod {
     /*public List<ClusterXYZ> run_xyz(List<List<Vec3>> regions, short nRegions) {
         // Clusters
         Instant t2 = Instant.now();
@@ -46,6 +38,19 @@ public abstract class Method {
 
         System.out.println("Overall, took " + Duration.between(t0, Instant.now()).toMillis() + " ms\n");
     }*/
+    public abstract List<Cluster> cluster(List<Record> records, Class<?> clazz) throws Exception;
 
-    public abstract List<Cluster> cluster_xyz(List<Record> records);
+    // Runs `cluster` method for each list of record in parallel using the abstract `cluster` method.
+    public List<Cluster> clusterAll(List<List<Record>> data, Class<?> clazz) throws Exception {
+        return data.parallelStream().flatMap(records -> {
+            try {
+                return cluster(records, clazz).stream();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).toList();
+    }
+
+    public abstract boolean equals(IMethod other);
 }

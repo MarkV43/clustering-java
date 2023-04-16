@@ -50,21 +50,10 @@ public class Record implements Copy {
         return xyz;
     }
 
-    public static Record random(Random rand) {
-        return new Record(Vec3.random(rand));
-    }
-
-    @Override
     public Record copy() {
         Record rec = new Record(lon, lat, pir, cir, service);
         rec.xyz = xyz;
         return rec;
     }
 
-    public static Collection<Vec2> get2dProjection(Collection<Record> points, Vec3 center) {
-        double lat = Math.acos(center.z); // theta
-        double lon = Math.atan2(center.x, center.y); // phi
-
-        return List.of();
-    }
 }

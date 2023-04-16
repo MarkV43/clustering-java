@@ -2,13 +2,16 @@ package fr.n7.clustering.methods;
 
 import fr.n7.clustering.Record;
 import fr.n7.clustering.cluster.Cluster;
-import fr.n7.clustering.cluster.ClusterXYZ;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Method1 extends Method {
-    public List<Cluster> cluster_xyz(List<Record> records) {
+public class Method1 extends IMethod {
+    @Override
+    public List<Cluster> cluster(List<Record> records, Class<?> clazz) throws Exception {
+        Constructor<?> constructor = clazz.getConstructor(Record.class);
+
         List<Cluster> clusters = new ArrayList<>(30_000);
 
         for (Record rec : records) {
@@ -21,9 +24,14 @@ public class Method1 extends Method {
                 }
             }
 
-            if (!added) clusters.add(new ClusterXYZ(rec));
+            if (!added) clusters.add((Cluster) constructor.newInstance(rec));
         }
 
         return clusters;
+    }
+
+    @Override
+    public boolean equals(IMethod other) {
+        return other instanceof Method1;
     }
 }

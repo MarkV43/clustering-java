@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:wght@100&display=swap');
+
+html, body {
+    margin: 0;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+}
+
+.card > label, h2 {
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+nav {
+    padding: 0.5rem 2rem;
+    background-color: midnightblue;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.spacer {
+    flex-grow: 10;
+}
+
+nav .dropdown {
+    position: relative;
+    margin-left: 1rem;
+}
+
+nav .dropdown .dropdown-hitbox {
+    position: absolute;
+    /* TODO */
+    display: none;
+    padding: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+nav .dropdown .dropdown-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    background-color: white;
+    padding: 0.8rem;
+    z-index: 10;
+    filter: drop-shadow(0.2rem 0.1rem 0.3rem #00000040);
+    border-radius: 0.2rem;
+    /*position: absolute;*/
+    right: 0;
+    top: 100%;
+}
+
+nav .dropdown:hover .dropdown-hitbox {
+    display: block;
+}
+
+nav > button:hover + div, nav > button + div:hover {
+    display: block;
+}
+
+main {
+    flex-grow: 1;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+main .container {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.meta-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+}
+
+.card {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    filter: drop-shadow(0.2rem 0.1rem 0.3rem #00000040);
+    max-width: 20rem;
+    width: 12rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: filter 0.3s;
+    justify-content: space-between;
+    cursor: move;
+}
+
+.card:hover {
+    filter: drop-shadow(0.3rem 0.15rem 0.35rem #00000040);
+}
+
+.card > label {
+    font-size: 2rem;
+    text-align: center;
+    cursor: move;
+}
+
+.card#clustering, .card#clustering > label {
+    cursor: auto;
+}
+
+.card > div {
+    text-align: center;
+}
+
+.card > div > label {
+    display: inline-block;
+    width: 5rem;
+    text-align: right;
+    margin-right: 0.5rem;
+}
+
+.card > div > input,
+.card > div > select {
+    width: 6rem;
+}
+
+#clustering {
+    border: 1px solid #00000080;
+}
+
+.card .data label {
+    text-align: left;
+}
+
+.card .data button.delete {
+    cursor: pointer;
+    color: red;
+    background-color: white;
+    border: 1px solid red;
+    border-radius: 0.3rem;
+    padding: 0.2rem 0.8rem;
+    transition: background-color 300ms, color 300ms;
+}
+
+.card .data button.delete:hover {
+    background-color: #fcc;
+}
+
+.card .data button.delete:active {
+    background-color: red;
+    color: white;
+}
+
+.dropdown-content button {
+    width: 9rem;
+    padding: 0.4rem;
+    background-color: white;
+    outline: none;
+    border: 1px solid lightgray;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: background-color 300ms, border 300ms;
+}
+
+.dropdown-content button:hover {
+    border-color: gray;
+}
+
+.dropdown-content button:active {
+    background-color: #eee;
+}
+
+.dropdown > button {
+    border: 1px solid white;
+    padding: 5px 10px;
+    border-radius: 0.3rem;
+    background-color: transparent;
+    color: white;
+}
+
+.dropdown > button::after {
+    content: "🞃";
+    margin-left: 5px;
+}
+
+nav button:is(#run, #stop) {
+    background-color: inherit;
+    margin-left: 1rem;
+    font-size: 1rem;
+    color: white;
+    padding: 0.2rem 1rem;
+    border-radius: 0.3rem;
+    border: 1px solid white;
+    cursor: pointer;
+    transition: background-color 300ms;
+}
+
+nav button:is(#run, #stop):hover {
+    background-color: darkblue;
+}

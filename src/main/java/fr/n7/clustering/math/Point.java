@@ -2,7 +2,6 @@ package fr.n7.clustering.math;
 
 import fr.n7.clustering.Copy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Point implements Copy {

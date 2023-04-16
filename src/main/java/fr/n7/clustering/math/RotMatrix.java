@@ -1,7 +1,8 @@
 package fr.n7.clustering.math;
 
 public class RotMatrix extends Matrix {
-    private double lat, lon;
+    private final double lat;
+    private final double lon;
 
     public RotMatrix(double lat, double lon) {
         super(Matrix.rotation3d(Matrix.Z_AXIS, lon)
