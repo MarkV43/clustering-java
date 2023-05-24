@@ -62,6 +62,25 @@ public abstract class Cluster implements Copy {
                 MAX_RADIUS_M * MAX_RADIUS_M / (EARTH_RADIUS_M * EARTH_RADIUS_M));
     }
 
+    public boolean isRateLimiting(Cluster other) {
+        if (this.totalRateKbps + other.totalRateKbps < MAX_RATE_KBPS) return false;
+
+        double distSq = this.center.distanceSquaredTo(other.center);
+
+        if (distSq > 2.0 * MAX_RADIUS_M * MAX_RADIUS_M / (EARTH_RADIUS_M * EARTH_RADIUS_M))
+            return false;
+
+        List<Point> points = Stream.concat(
+                this.points.stream(),
+                other.points.stream()
+        ).map(r -> (Point) r.getXYZ()).toList();
+
+        Vec3 center = (Vec3) Vec3.midpoint(points);
+
+        return points.stream().allMatch(point -> center.distanceSquaredTo(point) <
+                MAX_RADIUS_M * MAX_RADIUS_M / (EARTH_RADIUS_M * EARTH_RADIUS_M));
+    }
+
     /**
      * @param other This function assumes `other` parameter is never going to be used again,
      *              and thus does not copy its points
