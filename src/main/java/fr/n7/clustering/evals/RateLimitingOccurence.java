@@ -1,6 +1,5 @@
 package fr.n7.clustering.evals;
 
-import fr.n7.clustering.Record;
 import fr.n7.clustering.cluster.Cluster;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 //name pending; how often is information rate the limiting factor in the size of the clusters ?
 
 
-public class ClusteringCoefficient implements EvalFunctions {
+public class RateLimitingOccurence implements EvalFunctions {
 
     @Override
     public EvalVal evaluate(List<Cluster> clusters) {
@@ -31,7 +30,7 @@ public class ClusteringCoefficient implements EvalFunctions {
             }
         }
         return new EvalVal(2*count/(num*(num-1)) , EvalVal.Unit.NOUNIT); //if too small we change
-        
+
     }
 }
 
