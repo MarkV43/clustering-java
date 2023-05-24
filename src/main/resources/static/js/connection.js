@@ -115,9 +115,11 @@ function run() {
 function _updateCardData(card, data) {
     const label = card.children[card.children.length-1].children[0];
 
-    if (data.durationMs >= 0)
+    if (data.durationMs >= 0) {
         label.textContent = `${data.durationMs} ms`;
-    else
+        if (data.clusterAmount > 0)
+            label.textContent += `<br/>${data.clusterAmount}`;
+    } else
         label.textContent = "";
 }
 
