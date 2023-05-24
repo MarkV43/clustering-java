@@ -1,5 +1,6 @@
 package fr.n7.clustering.web;
 
+import fr.n7.clustering.cluster.ClusterMetric;
 import fr.n7.clustering.cluster.ClusterXYZ;
 import fr.n7.clustering.methods.IMethod;
 import fr.n7.clustering.methods.Method1;
@@ -26,7 +27,7 @@ public record RunConfig(List<PreLayer> pre, Class<?> cluster, IMethod clustering
                         new Sort(Sort.SortBy.PIR, Sort.SortOrder.Ascending),
                         new KMeans(10)
                 ),
-                ClusterXYZ.class, new Method1(),
+                ClusterXYZ.class, new Method1(ClusterMetric.PIR),
                 List.of(
                         new TwoInOne()
                 )
@@ -36,7 +37,7 @@ public record RunConfig(List<PreLayer> pre, Class<?> cluster, IMethod clustering
                         new Sort(Sort.SortBy.PIR,Sort.SortOrder.Ascending),
                         new KMeans(10)
                 ),
-                ClusterXYZ.class, new Method1(),
+                ClusterXYZ.class, new Method1(ClusterMetric.PIR),
                 List.of(
                         new ClusterCutting()
                 )

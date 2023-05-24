@@ -17,16 +17,17 @@ public abstract class Cluster implements Copy {
     protected double totalRateKbps;
     protected List<Record> points;
 
-    public void addPoint(Record rec) {
+    public void addPoint(Record rec, ClusterMetric metric) {
         points.add(rec);
-        totalRateKbps += rec.pir;
+        totalRateKbps += metric.getValue(rec);
         updateCenter();
     }
 
     abstract void updateCenter();
 
-    public boolean canAddPoint(Record rec) {
-        if (totalRateKbps + rec.pir > MAX_RATE_KBPS) {
+    public boolean canAddPoint(Record rec, ClusterMetric metric) {
+        double val = metric.getValue(rec);
+        if (totalRateKbps + val > MAX_RATE_KBPS) {
             return false;
         }
 
@@ -35,10 +36,10 @@ public abstract class Cluster implements Copy {
         return dist < MAX_RADIUS_M * MAX_RADIUS_M / (EARTH_RADIUS_M * EARTH_RADIUS_M);
     }
 
-    public boolean tryAddPoint(Record rec) {
-        boolean can = canAddPoint(rec);
+    public boolean tryAddPoint(Record rec, ClusterMetric metric) {
+        boolean can = canAddPoint(rec, metric);
         if (can)
-            addPoint(rec);
+            addPoint(rec, metric);
         return can;
     }
 

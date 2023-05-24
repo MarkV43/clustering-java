@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import fr.n7.clustering.cluster.Cluster;
+import fr.n7.clustering.cluster.ClusterMetric;
 import fr.n7.clustering.cluster.ClusterXYZ;
 import fr.n7.clustering.methods.*;
 import fr.n7.clustering.post.ClusterCutting;
@@ -117,11 +118,12 @@ public class Main {
         // Method
 
         IMethod meth;
+        ClusterMetric metric = null; // TODO
 
         switch (method) {
-            case 1 -> meth = new Method1();
-            case 2 -> meth = new Method2();
-            case 3 -> meth = new Method3();
+            case 1 -> meth = new Method1(metric);
+            case 2 -> meth = new Method2(metric);
+            case 3 -> meth = new Method3(metric);
             default -> throw new RuntimeException("Unknown method number");
         }
 

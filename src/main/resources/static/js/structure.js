@@ -168,9 +168,10 @@ function setupClustering() {
     label.textContent = "Clustering";
 
     const field1 = createSelect("Method:", ["1", "2", "3"]);
-    const field2 = createSelect("Algorithm:", ["LatLon", "XYZ", "Circle"], "xyz");
+    const field2 = createSelect("Metric:", ["CIR", "PIR"]);
+    const field3 = createSelect("Algorithm:", ["LatLon", "XYZ", "Circle"], "xyz");
 
-    method.append(label, field1, field2);
+    method.append(label, field1, field2, field3);
 }
 
 createCard("sort");

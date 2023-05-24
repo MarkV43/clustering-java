@@ -1,6 +1,7 @@
 package fr.n7.clustering.web;
 
 import fr.n7.clustering.cluster.ClusterEnc;
+import fr.n7.clustering.cluster.ClusterMetric;
 import fr.n7.clustering.cluster.ClusterXYZ;
 import fr.n7.clustering.methods.IMethod;
 import fr.n7.clustering.methods.Method1;
@@ -77,10 +78,11 @@ public class CardsBuilder extends Thread {
         }
 
         IMethod clustering;
+        ClusterMetric metric = ClusterMetric.fromString(clusteringObj.getString("metric"));
         switch (clusteringObj.getString("method")) {
-            case "1" -> clustering = new Method1();
-            case "2" -> clustering = new Method2();
-            case "3" -> clustering = new Method3();
+            case "1" -> clustering = new Method1(metric);
+            case "2" -> clustering = new Method2(metric);
+            case "3" -> clustering = new Method3(metric);
             default -> throw new RuntimeException("Unknown method \"" + clusteringObj.getString("method") + '"');
         }
 

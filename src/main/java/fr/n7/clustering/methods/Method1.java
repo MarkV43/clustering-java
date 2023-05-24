@@ -2,12 +2,17 @@ package fr.n7.clustering.methods;
 
 import fr.n7.clustering.Record;
 import fr.n7.clustering.cluster.Cluster;
+import fr.n7.clustering.cluster.ClusterMetric;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Method1 extends IMethod {
+    public Method1(ClusterMetric metric) {
+        super(metric);
+    }
+
     @Override
     public List<Cluster> cluster(List<Record> records, Class<?> clazz) throws Exception {
         Constructor<?> constructor = clazz.getConstructor(Record.class);
@@ -18,7 +23,7 @@ public class Method1 extends IMethod {
             boolean added = false;
 
             for (Cluster cl : clusters) {
-                if (cl.tryAddPoint(rec)) {
+                if (cl.tryAddPoint(rec, metric)) {
                     added = true;
                     break;
                 }

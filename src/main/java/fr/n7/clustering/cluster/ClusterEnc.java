@@ -23,7 +23,11 @@ public class ClusterEnc extends ClusterXYZ {
     }
 
     @Override
-    public boolean canAddPoint(Record rec) {
+    public boolean canAddPoint(Record rec, ClusterMetric metric) {
+        if (totalRateKbps + metric.getValue(rec) > MAX_RATE_KBPS) {
+            return false;
+        }
+
         List<Vec2> points = this.points.stream().map(p -> {
             Vec3 trans = inv_rotation.mul(p.getXYZ());
             return new Vec2(trans.y, trans.z);
@@ -73,8 +77,8 @@ public class ClusterEnc extends ClusterXYZ {
     }
 
     @Override
-    public boolean tryAddPoint(Record rec) {
-        if (rec.pir + totalRateKbps > MAX_RATE_KBPS)
+    public boolean tryAddPoint(Record rec, ClusterMetric metric) {
+        if (metric.getValue(rec) + totalRateKbps > MAX_RATE_KBPS)
             return false;
 
         if (rec.getXYZ().distanceTo(this.center) >= MAX_RADIUS_M / EARTH_RADIUS_M * 1.05)

@@ -31,8 +31,8 @@ public class ClusterXYZ extends Cluster {
     }
 
     @Override
-    public boolean canAddPoint(Record rec) {
-        if (totalRateKbps + rec.pir > MAX_RATE_KBPS) {
+    public boolean canAddPoint(Record rec, ClusterMetric metric) {
+        if (totalRateKbps + metric.getValue(rec) > MAX_RATE_KBPS) {
             return false;
         }
 

@@ -65,7 +65,8 @@ function getPost() {
 function getClustering() {
     return {
         method: clustering.children[1].children[1].value,
-        algorithm: clustering.children[2].children[1].value,
+        metric: clustering.children[2].children[1].value,
+        algorithm: clustering.children[3].children[1].value,
     };
 }
 

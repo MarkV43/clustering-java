@@ -2,12 +2,17 @@ package fr.n7.clustering.methods;
 
 import fr.n7.clustering.Record;
 import fr.n7.clustering.cluster.Cluster;
+import fr.n7.clustering.cluster.ClusterMetric;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Method2 extends IMethod {
+    public Method2(ClusterMetric metric) {
+        super(metric);
+    }
+
     @Override
     public List<Cluster> cluster(List<Record> records, Class<?> clazz) throws Exception {
         Constructor<?> constructor = clazz.getConstructor(Record.class);
@@ -15,13 +20,13 @@ public class Method2 extends IMethod {
         List<Cluster> clusters = new ArrayList<>(30_000);
         int size = records.size();
 
-        records = records.parallelStream().sorted((a, b) -> {
+        /*records = records.parallelStream().sorted((a, b) -> {
             if (a.service != b.service) {
                 return b.service - a.service;
             } else {
                 return (int) Math.signum(b.pir - a.pir);
             }
-        }).toList();
+        }).toList();*/
 
         boolean[] deleted = new boolean[size];
 
@@ -37,7 +42,7 @@ public class Method2 extends IMethod {
                 if (deleted[j]) continue;
                 Record rec = records.get(j);
 
-                if (cl.tryAddPoint(rec)) {
+                if (cl.tryAddPoint(rec, metric)) {
                     deleted[j] = true;
                 }
             }
