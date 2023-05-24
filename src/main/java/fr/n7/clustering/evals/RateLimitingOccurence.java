@@ -22,7 +22,7 @@ public class ClusteringCoefficient implements EvalFunctions {
         while (!(decoy.isEmpty())) {
             for (Cluster claster : decoy) {
                 for (Cluster friends : decoy) {
-                    if (claster.canMergeWithme(friends)) {
+                    if (claster.isRateLimiting(friends)) {
                         count += 1;
                         decoy.remove(friends); //we friends no more !!!
                     }
@@ -30,7 +30,8 @@ public class ClusteringCoefficient implements EvalFunctions {
                 }
             }
         }
-        return new EvalVal(2*count/(num*(num-1)) , EvalVal.Unit.NOUNIT);
+        return new EvalVal(2*count/(num*(num-1)) , EvalVal.Unit.NOUNIT); //if too small we change
+        
     }
 }
 
