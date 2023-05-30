@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public abstract class Cluster implements Copy {
-    public static final double MAX_RATE_KBPS = 4e9;
+    public static final double MAX_RATE_KBPS = 4e6;
     public static final double MAX_RADIUS_M = 45e3;
     public static final double EARTH_RADIUS_M = 6_371_009;
 

@@ -72,7 +72,7 @@ function createCardData(delFunc) {
         eval.style.display = eval.style.display === "none" ? "block" : "none";
     });
 
-    data.append(time, amount, expand);
+    data.append(time, amount, eval, expand);
 
     if (delFunc !== null) {
         const del = document.createElement("button");
@@ -83,8 +83,6 @@ function createCardData(delFunc) {
 
         data.append(del);
     }
-
-    data.append(eval);
 
     return data;
 }

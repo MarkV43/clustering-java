@@ -18,6 +18,6 @@ public class AverageCIR implements EvalFunctions {
         }
         //average cir per cluster
         EvalVal cir = new EvalVal(sum1/ clusters.size(), EvalVal.Unit.KBPS);
-        return null;
+        return cir;
     }
 }

@@ -18,7 +18,7 @@ public class PIRFillingRate implements EvalFunctions{
         int dw = 0;
         for(Cluster clas : clusters) {
             int count = -1;
-            int pirCumul = 0;
+            double pirCumul = 0;
             dw +=1;
             Object[] PoiN = clas.getPoints().toArray();
             int size;
@@ -31,7 +31,7 @@ public class PIRFillingRate implements EvalFunctions{
                 count +=1;
                 //Gris Dior
             }while(pirCumul < max);
-            tab[dw] = count/(size);
+            tab[dw] = (double) count / size;
         }
         double sum = Arrays.stream(tab).sum()/ clusters.size();
         return new EvalVal(sum*100, EvalVal.Unit.PERCENTAGE);

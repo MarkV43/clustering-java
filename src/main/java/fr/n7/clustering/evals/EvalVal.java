@@ -5,7 +5,7 @@ public class EvalVal {
     public Unit hunit;
 
     //UEs if I do like a mean of users
-    enum Unit {PERCENTAGE, UEs, KBPS, NOUNIT};
+    enum Unit {PERCENTAGE, UEs, KBPS, NOUNIT}
 
 
     public EvalVal(double val, Unit h) {
@@ -16,4 +16,7 @@ public class EvalVal {
 
     public Unit getUnit() {return hunit;}
 
+    public String toString() {
+        return "{\"value\":" + value + ",\"unit\":\"" + hunit + "\"}";
+    }
 }

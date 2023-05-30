@@ -146,6 +146,10 @@ main .container {
     grid-column: 1;
 }
 
+.card .data label.time {
+    font-size: smaller;
+}
+
 .card .data label.expand {
     grid-column: 2;
     grid-row: 2;
@@ -153,6 +157,7 @@ main .container {
     text-align: center;
     cursor: pointer;
     user-select: none;
+    display: none;
 }
 
 .card .data label.expand:hover {
@@ -160,8 +165,18 @@ main .container {
 }
 
 .card .data div.eval {
-    grid-column: 1/2;
+    grid-column: 1 / span 2;
     grid-row: 3;
+    font-size: small;
+    margin: auto;
+}
+
+.card .data .eval table td:first-child {
+    text-align: right;
+}
+
+.card .data .eval table td:last-child {
+    text-align: left;
 }
 
 .card .data button.delete {

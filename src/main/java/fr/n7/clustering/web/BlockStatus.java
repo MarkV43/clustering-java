@@ -5,6 +5,7 @@ import java.util.Objects;
 public final class BlockStatus {
     public long durationMs;
     public int clusterAmount;
+    public BlockEvals evals;
 
     public BlockStatus() {
         durationMs = -1;
@@ -29,11 +30,14 @@ public final class BlockStatus {
     public String toString() {
         return '{' +
                 "\"durationMs\":" + durationMs + ", " +
-                "\"clusterAmount\":" + clusterAmount + '}';
+                "\"clusterAmount\":" + clusterAmount + ", " +
+                "\"eval\":" + evals +
+                '}';
     }
 
-    public void update(long timestamp, int amount) {
+    public void update(long timestamp, int amount, BlockEvals evals) {
         durationMs = timestamp;
         clusterAmount = amount;
+        this.evals = evals;
     }
 }

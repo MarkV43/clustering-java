@@ -47,13 +47,13 @@ public class RunStatus {
         }
     }
 
-    public void update(int index, long durationMs, int amount) {
+    public void update(int index, long durationMs, int amount, BlockEvals evals) {
         if (index < preList.size()) { // PRE
-            preList.get(index).update(durationMs, amount);
+            preList.get(index).update(durationMs, amount, evals);
         } else if (index == preList.size()) { // NONE
-            clustering.update(durationMs, amount);
+            clustering.update(durationMs, amount, evals);
         } else { // POST
-            this.postList.get(index - preList.size() - 1).update(durationMs, amount);
+            this.postList.get(index - preList.size() - 1).update(durationMs, amount, evals);
         }
     }
 

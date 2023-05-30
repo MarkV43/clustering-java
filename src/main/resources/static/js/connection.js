@@ -112,18 +112,70 @@ function run() {
         .catch(e => console.error("Request failed.", e));
 }
 
+
+/**
+ * @param {number} num
+ * @return {string}
+ */
+function formatNumber(num) {
+    const str = num + '';
+    const [left, right] = str.split('.');
+    if (left.length > 4) {
+        return Math.round(num) + '';
+    }
+
+    if (left.length > 1 || left[0] !== '0') {
+        return (Math.round(num * 100) / 100) + '';
+    }
+
+    const decPlaces = -Math.floor(Math.log10(num)) + 1;
+    const exp = Math.pow(10, decPlaces + 1);
+    return (Math.round(num * exp) / exp) + '';
+}
+
+/**
+ * @param {string} unit
+ * @return {string}
+ */
+function formatUnit(unit) {
+    switch (unit.toUpperCase()) {
+        case "PERCENTAGE":
+            return "%";
+        case "UES":
+            return " UEs";
+        case "KBPS":
+            return " kbps";
+        case "NOUNIT":
+            return "";
+        default:
+            throw new Error(`Unknown unit ${unit}`);
+    }
+}
+
 function _updateCardData(card, data) {
     const time = card.children[card.children.length-1].children[0];
     const amount = card.children[card.children.length-1].children[1];
+    const eval = card.children[card.children.length-1].children[2];
 
     if (data.durationMs >= 0) {
         time.textContent = `${prettyMs(data.durationMs)}`;
         if (data.clusterAmount > 0) {
             amount.textContent = `${data.clusterAmount}`;
+
+            console.log(data.eval);
+
+            evalHtml = "<table><tbody>";
+            // Go through all evals and add them to `eval`
+            for (let [key, value] of Object.entries(data.eval)) {
+                evalHtml += `<tr><td>${key}</td><td>${formatNumber(value.value)}${formatUnit(value.unit)}</td></tr>`;
+            }
+            evalHtml += "</tbody></table>";
+            eval.innerHTML = evalHtml;
         }
     } else {
         time.textContent = "";
         amount.textContent = "";
+        eval.textContent = "";
     }
 }
 

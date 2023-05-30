@@ -82,11 +82,18 @@ public class CardRunner {
 
             Duration dur = Duration.between(t0, t1);
 
+            System.out.println("Took " + dur.toMillis() + " ms");
+
             int clusterAmount = input.getRight().isPresent() ? input.getRight().get().size() : -1;
 
-            CardController.status.update(k, dur.toMillis(), clusterAmount);
+            BlockEvals evals = new BlockEvals(input.getRight().orElse(null));
 
-            System.out.println("Took " + dur.toMillis() + " ms");
+            CardController.status.update(k, dur.toMillis(), clusterAmount, evals);
+
+            Instant t2 = Instant.now();
+
+            System.out.println("EVAL Took " + Duration.between(t1, t2).toMillis() + " ms");
+
         }
 
         // Last thing
