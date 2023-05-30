@@ -92,7 +92,10 @@ public class CardsBuilder extends Thread {
             PostLayer layer;
             switch (name) {
                 case "2in1" -> layer = new TwoInOne();
-                case "cutting" -> layer = new ClusterCutting();
+                case "cutting" -> {
+                    float threshold = obj.getFloat("threshold");
+                    layer = new ClusterCutting(threshold);
+                }
                 default -> throw new RuntimeException("Unknown layer \"" + name + '"');
             }
             post.add(layer);

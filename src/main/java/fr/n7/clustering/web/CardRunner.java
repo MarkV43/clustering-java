@@ -30,6 +30,7 @@ public class CardRunner {
         unchanged = config.findUnchanged(this.config);
         this.config = config;
         CardController.status.setFrom(config, unchanged);
+        System.out.println("Unchanged: " + unchanged);
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
@@ -37,8 +38,10 @@ public class CardRunner {
         CardController.status.setStopping(false);
         CardController.status.setRunning(true);
 
-        if (unchanged >= config.size())
+        if (unchanged >= config.size()) {
+            CardController.status.setRunning(false);
             return;
+        }
         // Reset buffer where needed
         if (buffer.size() > config.size())
             buffer.subList(config.size(), buffer.size()).clear();

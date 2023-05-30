@@ -5,7 +5,10 @@ import fr.n7.clustering.cluster.Cluster;
 import java.util.List;
 
 public class ClusterCutting implements PostLayer {
-    public ClusterCutting() {
+    float threshold;
+
+    public ClusterCutting(float threshold) {
+        this.threshold = threshold;
     }
 
     @Override
@@ -15,6 +18,6 @@ public class ClusterCutting implements PostLayer {
 
     @Override
     public boolean equals(PostLayer other) {
-        return other instanceof ClusterCutting;
+        return other instanceof ClusterCutting && threshold == ((ClusterCutting) other).threshold;
     }
 }

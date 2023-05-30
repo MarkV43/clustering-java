@@ -16,7 +16,7 @@ public class RateLimitingOccurence implements EvalFunctions {
         double count = 0;
         double distance;
         double monRayon = Cluster.MAX_RADIUS_M;
-        double num = 87989;
+        double num = 87989; // total number of points in the dataset
         List<Cluster> decoy = clusters;
         while (!(decoy.isEmpty())) {
             for (Cluster claster : decoy) {

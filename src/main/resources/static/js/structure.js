@@ -51,21 +51,42 @@ function createCard(card) {
 }
 
 function createCardData(delFunc) {
-    const div = document.createElement("div");
-    div.classList.add("data");
+    const eval = document.createElement("div");
+    eval.classList.add("eval");
 
-    const label = document.createElement("label");
-    label.textContent = "";
+    const data = document.createElement("div");
+    data.classList.add("data");
 
-    const del = document.createElement("button");
-    del.textContent = "Delete";
-    del.classList.add("delete");
+    const time = document.createElement("label");
+    time.classList.add("time");
+    time.textContent = "";
 
-    del.addEventListener("click", delFunc);
+    const amount = document.createElement("label");
+    time.classList.add("amount");
+    time.textContent = "";
 
-    div.append(label, del);
+    const expand = document.createElement("label");
+    expand.classList.add("expand");
+    expand.textContent = "⮟";
+    expand.addEventListener("click", () => {
+        eval.style.display = eval.style.display === "none" ? "block" : "none";
+    });
 
-    return div;
+    data.append(time, amount, expand);
+
+    if (delFunc !== null) {
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.classList.add("delete");
+
+        del.addEventListener("click", delFunc);
+
+        data.append(del);
+    }
+
+    data.append(eval);
+
+    return data;
 }
 
 /**
@@ -171,7 +192,9 @@ function setupClustering() {
     const field2 = createSelect("Metric:", ["CIR", "PIR"]);
     const field3 = createSelect("Algorithm:", ["LatLon", "XYZ", "Circle"], "xyz");
 
-    method.append(label, field1, field2, field3);
+    const data = createCardData(null);
+
+    method.append(label, field1, field2, field3, data);
 }
 
 createCard("sort");

@@ -162,7 +162,7 @@ public class Main {
 
         System.out.printf("Clustering finished. %d\n", clusters.size());
 
-        clusters = new ClusterCutting().treat(clusters);
+        clusters = new ClusterCutting(10).treat(clusters);
 
         System.out.printf("Cluster Cutting finished. %d\n", clusters.size());
 

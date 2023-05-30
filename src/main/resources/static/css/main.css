@@ -136,8 +136,32 @@ main .container {
     border: 1px solid #00000080;
 }
 
+.card .data {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
+
 .card .data label {
     text-align: left;
+    grid-column: 1;
+}
+
+.card .data label.expand {
+    grid-column: 2;
+    grid-row: 2;
+    transition: transform 300ms;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.card .data label.expand:hover {
+    transform: scale(105%);
+}
+
+.card .data div.eval {
+    grid-column: 1/2;
+    grid-row: 3;
 }
 
 .card .data button.delete {
@@ -148,6 +172,8 @@ main .container {
     border-radius: 0.3rem;
     padding: 0.2rem 0.8rem;
     transition: background-color 300ms, color 300ms;
+    grid-column: 2;
+    grid-row: 1;
 }
 
 .card .data button.delete:hover {

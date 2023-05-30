@@ -113,14 +113,18 @@ function run() {
 }
 
 function _updateCardData(card, data) {
-    const label = card.children[card.children.length-1].children[0];
+    const time = card.children[card.children.length-1].children[0];
+    const amount = card.children[card.children.length-1].children[1];
 
     if (data.durationMs >= 0) {
-        label.textContent = `${data.durationMs} ms`;
-        if (data.clusterAmount > 0)
-            label.textContent += `<br/>${data.clusterAmount}`;
-    } else
-        label.textContent = "";
+        time.textContent = `${prettyMs(data.durationMs)}`;
+        if (data.clusterAmount > 0) {
+            amount.textContent = `${data.clusterAmount}`;
+        }
+    } else {
+        time.textContent = "";
+        amount.textContent = "";
+    }
 }
 
 function listen() {

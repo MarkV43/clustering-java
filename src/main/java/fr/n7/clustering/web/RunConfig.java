@@ -39,7 +39,7 @@ public record RunConfig(List<PreLayer> pre, Class<?> cluster, IMethod clustering
                 ),
                 ClusterXYZ.class, new Method1(ClusterMetric.PIR),
                 List.of(
-                        new ClusterCutting()
+                        new ClusterCutting(10)
                 )
         );
 
