@@ -21,7 +21,7 @@ public class ClusterXYZ extends Cluster {
     public ClusterXYZ(List<Record> points) {
         this.points = new ArrayList<>(points);
         this.totalRateKbps = points.stream().mapToDouble(r -> r.pir).sum();
-        updateCenter();
+        updateCenter(null, 0);
     }
 
     protected ClusterXYZ(Point center, double totalRateKbps, List<Record> points) {
@@ -46,12 +46,17 @@ public class ClusterXYZ extends Cluster {
     }
 
     @Override
-    void updateCenter() {
-        center = Vec3.midpoint(points.stream().map(r -> (Point) r.getXYZ()).toList());
+    void updateCenter(Record rec, int n) {
+        if (rec == null)
+            center = Vec3.midpoint(points.stream().map(r -> (Point) r.getXYZ()).toList());
+        else {
+            Point incr = center.sub(rec.getXYZ()).div(n);
+            center = center.add(incr);
+        }
     }
 
     @Override
-    public Stream<Cluster> split(int amount) {
+    public Stream<Cluster> split(int amount, double threshold) {
         if (points.size() == 1) {
             return Stream.of((Cluster) this.copy());
         }
@@ -70,7 +75,7 @@ public class ClusterXYZ extends Cluster {
                 double dist = ra.getXYZ().distanceSquaredTo(rb.getXYZ());
 
                 // If the two points are 10km or closer
-                if (dist < Cluster.MAX_RADIUS_M * Cluster.MAX_RADIUS_M / (Cluster.EARTH_RADIUS_M * Cluster.EARTH_RADIUS_M) * 2.0 / 81.0) {
+                if (dist * Cluster.EARTH_RADIUS_M * Cluster.EARTH_RADIUS_M / 1_000_000 < threshold * threshold) {
                     return Stream.of(this);
                 }
             }

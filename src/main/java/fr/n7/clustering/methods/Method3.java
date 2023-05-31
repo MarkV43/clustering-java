@@ -28,7 +28,6 @@ public class Method3 extends IMethod {
             deleted[i] = true;
             Record record = records.get(i);
 
-//            Cluster cl = new ClusterXYZ(record);
             Cluster cl = (Cluster) constructor.newInstance(record);
 
             int closest;

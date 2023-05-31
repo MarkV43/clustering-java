@@ -13,7 +13,7 @@ public class ClusterCutting implements PostLayer {
 
     @Override
     public List<Cluster> treat(List<Cluster> clusters) {
-        return clusters.stream().flatMap(cl -> cl.split(2)).toList();
+        return clusters.stream().flatMap(cl -> cl.split(2, threshold)).toList();
     }
 
     @Override

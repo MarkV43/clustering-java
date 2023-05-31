@@ -39,7 +39,7 @@ public class ClusterEnc extends ClusterXYZ {
     }
 
     @Override
-    void updateCenter() {
+    void updateCenter(Record rec, int n) {
         if (inv_rotation == null) {
             Vec3 sum = new Vec3(0, 0, 0);
             for (Record p : points) {
@@ -181,7 +181,7 @@ public class ClusterEnc extends ClusterXYZ {
     }
 
     @Override
-    public Stream<Cluster> split(int amount) {
+    public Stream<Cluster> split(int amount, double threshold) {
         if (points.size() == 1) {
             return Stream.of((Cluster) this.copy());
         }
@@ -200,7 +200,7 @@ public class ClusterEnc extends ClusterXYZ {
                 double dist = ra.getXYZ().distanceSquaredTo(rb.getXYZ());
 
                 // If the two points are 10km or closer
-                if (dist < Cluster.MAX_RADIUS_M * Cluster.MAX_RADIUS_M / (Cluster.EARTH_RADIUS_M * Cluster.EARTH_RADIUS_M) * 2.0 / 81.0) {
+                if (dist * Cluster.EARTH_RADIUS_M * Cluster.EARTH_RADIUS_M / 1_000_000 < threshold * threshold) {
                     return Stream.of(this);
                 }
             }

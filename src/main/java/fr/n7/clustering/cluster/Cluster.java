@@ -20,10 +20,10 @@ public abstract class Cluster implements Copy {
     public void addPoint(Record rec, ClusterMetric metric) {
         points.add(rec);
         totalRateKbps += metric.getValue(rec);
-        updateCenter();
+        updateCenter(rec, points.size());
     }
 
-    abstract void updateCenter();
+    abstract void updateCenter(Record rec, int n);
 
     public boolean canAddPoint(Record rec, ClusterMetric metric) {
         double val = metric.getValue(rec);
@@ -85,7 +85,7 @@ public abstract class Cluster implements Copy {
      * @param other This function assumes `other` parameter is never going to be used again,
      *              and thus does not copy its points
      */
-    public void merge(Cluster other) {
+    public void mergeWith(Cluster other) {
         totalRateKbps += other.totalRateKbps;
         points.addAll(other.points);
         center = Vec3.midpoint(points.stream().map(r -> (Point) r.getXYZ()).toList());
@@ -94,7 +94,7 @@ public abstract class Cluster implements Copy {
     public boolean tryMergeWith(Cluster other) {
         boolean can = canMergeWith(other);
         if (can)
-            merge(other);
+            mergeWith(other);
         return can;
     }
 
@@ -106,5 +106,5 @@ public abstract class Cluster implements Copy {
         return points;
     }
 
-    public abstract Stream<Cluster> split(int amount);
+    public abstract Stream<Cluster> split(int amount, double threshold);
 }
